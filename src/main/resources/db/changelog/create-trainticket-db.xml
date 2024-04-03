@@ -1,0 +1,76 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet  author="trainticket-server"  id="1">
+        <validCheckSum>ANY</validCheckSum>
+        <sql splitStatements="false" stripComments="false">
+            CREATE TABLE IF NOT EXISTS users (
+                id long NOT NULL,
+                first_name varchar(100) NOT NULL,
+                last_name varchar(100),
+                email varchar(50) NOT NULL,
+                created_at timestamp with time zone,
+                updated_at timestamp with time zone,
+                PRIMARY KEY (id)
+            );
+            CREATE SEQUENCE USERS_SEQ START WITH 1 INCREMENT BY 1;
+            ALTER TABLE users ADD CONSTRAINT EMAIL_UNIQUE UNIQUE(email);
+
+
+            CREATE TABLE IF NOT EXISTS trains (
+                train_number long not null,
+                name varchar(100),
+                created_at timestamp with time zone,
+                updated_at timestamp with time zone,
+                PRIMARY KEY (train_number)
+            );
+
+            CREATE TABLE IF NOT EXISTS routes (
+                id long not null,
+                from_station text not null,
+                to_station text not null,
+                remaining_seats_section_a int,
+                remaining_seats_section_b int,
+                price int,
+                created_at timestamp with time zone,
+                updated_at timestamp with time zone,
+                train_number int,
+                PRIMARY KEY (id)
+            );
+
+            ALTER TABLE routes
+            ADD FOREIGN KEY (train_number)
+            REFERENCES trains (train_number);
+
+            CREATE TABLE IF NOT EXISTS tickets (
+                pnr varchar(10) not null,
+                section varchar(1),
+                seat_number int,
+                passenger_full_name varchar(100),
+                passenger_age int,
+                passenger_sex varchar(10),
+                status varchar(10),
+                created_at timestamp with time zone,
+                updated_at timestamp with time zone,
+                route_id int,
+                purchased_by long,
+                PRIMARY KEY(pnr)
+            );
+
+            ALTER TABLE tickets
+            ADD FOREIGN KEY (route_id)
+            REFERENCES routes (id)
+            ON DELETE SET NULL;
+
+            ALTER TABLE tickets
+            ADD FOREIGN KEY (purchased_by)
+            REFERENCES users (id)
+            ON DELETE SET NULL;
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
