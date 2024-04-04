@@ -12,9 +12,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Transactional
     void deleteByEmail(String email);
 
-    @Query("select u from User u where u.email = ?1")
+    @Query("SELECT u FROM User u WHERE u.email = ?1")
     User getByEmail(String email);
 
-    @Query("select u from User u where u.id = ?1")
+    @Query("SELECT u FROM User u WHERE u.id = ?1")
     User getById(String id);
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TicketRepository extends JpaRepository<Ticket, String> {
 
-    @Query("select t from Ticket t where t.pnr=?1")
+    @Query("SELECT t FROM Ticket t WHERE t.pnr=?1")
     Ticket findByPnrNumber(String pnr);
 
     @Query("""
