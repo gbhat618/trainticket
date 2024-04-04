@@ -2,6 +2,7 @@ package com.guruprasad.trainticket.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.guruprasad.trainticket.dto.Ticket;
 import com.guruprasad.trainticket.dto.TicketUpdatePayload;
 import com.guruprasad.trainticket.service.TicketService;
@@ -58,7 +59,9 @@ public class TicketController {
         );
 
         if (existingTicket != null) {
-            ResponseEntity.badRequest().body("{\"reasons\": \"requested seat is already reserved\"}");
+            ObjectNode response = trainUtils.getMapper().createObjectNode();
+            response.put("reason", "requested seat is already reserved, please request again with different change of seat");
+            ResponseEntity.badRequest().body(response);
         }
 
         Ticket updated = ticketService.updateNewSeat(ticket, updatePayload);

@@ -1,6 +1,8 @@
 package com.guruprasad.trainticket.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.guruprasad.trainticket.constant.TicketStatus;
 import com.guruprasad.trainticket.dto.Route;
 import com.guruprasad.trainticket.dto.Ticket;
@@ -34,11 +36,13 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<String> reserveTicket(@RequestBody @Valid TicketReservationPayload reservationPayload) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> reserveTicket(@RequestBody @Valid TicketReservationPayload reservationPayload) throws JsonProcessingException {
         Route route = routeService.getRoute(reservationPayload);
 
         if (route.getPrice() != reservationPayload.getPricePaid()) {
-            return ResponseEntity.badRequest().body("Need to pay exact price for the route; route price is: " + route.getPrice());
+            ObjectNode response = trainUtils.getMapper().createObjectNode();
+            response.put("reason", "Need to pay exact price for the route; route price is: " + route.getPrice());
+            return ResponseEntity.badRequest().body(response);
         }
 
         User purchasedBy = userService.getOrCreateUser(reservationPayload);
@@ -61,9 +65,9 @@ public class ReservationController {
             int seatNumber = route.getRemainingSeatSectionB();
             ticket.setSeatNumber(seatNumber);
         } else {
-            ResponseEntity.unprocessableEntity().body(
-                "No Tickets are available, please raise request for amount refund within 30 days"
-            );
+            ObjectNode response = trainUtils.getMapper().createObjectNode();
+            response.put("reason", "No Tickets are available, please raise request for amount refund within 30 days");
+            ResponseEntity.unprocessableEntity().body(response);
         }
 
         ticket.setPnr(trainUtils.generateNewPNR());
@@ -79,6 +83,6 @@ public class ReservationController {
 
         Ticket saved = ticketService.reserveTicket(ticket);
 
-        return ResponseEntity.ok().body(trainUtils.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(saved));
+        return ResponseEntity.ok().body(trainUtils.getMapper().convertValue(saved, JsonNode.class));
     }
 }

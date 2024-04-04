@@ -1,6 +1,8 @@
 package com.guruprasad.trainticket.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.guruprasad.trainticket.dto.User;
 import com.guruprasad.trainticket.service.UserService;
 import com.guruprasad.trainticket.utils.TrainUtils;
@@ -22,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getUser(@RequestParam("email") Optional<String> email, @RequestParam("id") Optional<String> id) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> getUser(@RequestParam("email") Optional<String> email, @RequestParam("id") Optional<String> id) throws JsonProcessingException {
         User user;
 
         if (id.isPresent()) {
@@ -30,24 +32,28 @@ public class UserController {
         } else if (email.isPresent()) {
             user = userService.getByEmail(email.get());
         } else {
-            return ResponseEntity.badRequest().body("Either id or email should be given in the request parameters");
+            ObjectNode response = trainUtils.getMapper().createObjectNode();
+            response.put("reason", "Either id or email should be given in the request parameters");
+            return ResponseEntity.badRequest().body(response);
         }
 
-        return ResponseEntity.ok().body(
-            trainUtils.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(user)
-        );
+        return ResponseEntity.ok().body(trainUtils.getMapper().convertValue(user, JsonNode.class));
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteUser(@RequestParam("email") Optional<String> email, @RequestParam("id") Optional<String> id) {
+    public ResponseEntity<JsonNode> deleteUser(@RequestParam("email") Optional<String> email, @RequestParam("id") Optional<String> id) {
+        ObjectNode response = trainUtils.getMapper().createObjectNode();
+
         if (id.isPresent()) {
             userService.deleteById(id.get());
         } else if (email.isPresent()) {
             userService.deleteByEmail(email.get());
         } else {
-            ResponseEntity.badRequest().body("Either id or email should be given in the request parameters");
+            response.put("reason", "Either id or email should be given in the request parameters");
+            ResponseEntity.badRequest().body(response);
         }
 
-        return ResponseEntity.ok().body(String.valueOf(true));
+        response.put("message", "DELETED");
+        return ResponseEntity.ok().body(response);
     }
 }
