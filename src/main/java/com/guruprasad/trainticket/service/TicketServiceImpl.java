@@ -3,7 +3,6 @@ package com.guruprasad.trainticket.service;
 import com.guruprasad.trainticket.dto.Ticket;
 import com.guruprasad.trainticket.dto.TicketUpdatePayload;
 import com.guruprasad.trainticket.repository.TicketRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
