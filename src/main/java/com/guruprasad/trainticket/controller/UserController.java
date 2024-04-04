@@ -28,7 +28,7 @@ public class UserController {
         User user;
 
         if (id.isPresent()) {
-            user = userService.getById(id.get());
+            user = userService.getById(Long.valueOf(id.get()));
         } else if (email.isPresent()) {
             user = userService.getByEmail(email.get());
         } else {
@@ -45,7 +45,7 @@ public class UserController {
         ObjectNode response = trainUtils.getMapper().createObjectNode();
 
         if (id.isPresent()) {
-            userService.deleteById(id.get());
+            userService.deleteById(Long.valueOf(id.get()));
         } else if (email.isPresent()) {
             userService.deleteByEmail(email.get());
         } else {

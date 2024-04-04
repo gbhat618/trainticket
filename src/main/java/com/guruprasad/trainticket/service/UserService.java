@@ -5,7 +5,7 @@ import com.guruprasad.trainticket.dto.User;
 
 public interface UserService {
 
-    User getById(String id);
+    User getById(Long id);
 
     User getByEmail(String email);
 
@@ -13,5 +13,5 @@ public interface UserService {
 
     void deleteByEmail(String email);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 }

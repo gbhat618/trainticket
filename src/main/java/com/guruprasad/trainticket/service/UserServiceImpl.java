@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.getByEmail(email);
     }
 
-    public User getById(String id) {
+    public User getById(Long id) {
         return userRepository.getById(id);
     }
 
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteByEmail(email);
     }
 
-    public void deleteById(String id) {
-        userRepository.deleteById(id);
+    public void deleteById(Long id) {
+        userRepository.deleteById(String.valueOf(id));
     }
 }
