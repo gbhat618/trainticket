@@ -2,7 +2,6 @@ package com.guruprasad.trainticket.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.guruprasad.trainticket.dto.Ticket;
 import com.guruprasad.trainticket.dto.TicketUpdatePayload;
 import com.guruprasad.trainticket.service.TicketService;
@@ -47,24 +46,12 @@ public class TicketController {
 
         JsonNode validate = trainUtils.validate(updatePayload);
 
-        if (validate.has("reason")) {
+        if (validate != null) {
             return ResponseEntity.badRequest().body(validate);
         }
 
-        Ticket ticket = ticketService.getTicketFromPnr(pnrNumber);
-        Ticket existingTicket = ticketService.getTicketForSectionAndSeatNumber(
-            ticket.getRoute().getTrain().getTrainNumber(),
-            updatePayload.getNewSection(),
-            updatePayload.getNewSeat()
-        );
+        JsonNode response = ticketService.updateNewSeatIfFree(pnrNumber, updatePayload);
 
-        if (existingTicket != null) {
-            ObjectNode response = trainUtils.getMapper().createObjectNode();
-            response.put("reason", "requested seat is already reserved, please request again with different change of seat");
-            ResponseEntity.badRequest().body(response);
-        }
-
-        Ticket updated = ticketService.updateNewSeat(ticket, updatePayload);
-        return ResponseEntity.ok().body(trainUtils.getMapper().convertValue(updated, JsonNode.class));
+        return ResponseEntity.ok().body(response);
     }
 }

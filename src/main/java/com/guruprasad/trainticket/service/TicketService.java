@@ -1,5 +1,6 @@
 package com.guruprasad.trainticket.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.guruprasad.trainticket.dto.Ticket;
 import com.guruprasad.trainticket.dto.TicketUpdatePayload;
 
@@ -15,5 +16,5 @@ public interface TicketService {
 
     List<Ticket> listTicketsByTrainSection(int trainNumber, String section);
 
-    Ticket updateNewSeat(Ticket ticket, TicketUpdatePayload updatePayload);
+    JsonNode updateNewSeatIfFree(String pnrNumber, TicketUpdatePayload updatePayload);
 }

@@ -1,8 +1,11 @@
 package com.guruprasad.trainticket.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.guruprasad.trainticket.dto.Ticket;
 import com.guruprasad.trainticket.dto.TicketUpdatePayload;
 import com.guruprasad.trainticket.repository.TicketRepository;
+import com.guruprasad.trainticket.utils.TrainUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,11 @@ import java.util.List;
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
+    private final TrainUtils trainUtils;
 
-    public TicketServiceImpl(TicketRepository ticketRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, TrainUtils trainUtils) {
         this.ticketRepository = ticketRepository;
+        this.trainUtils = trainUtils;
     }
 
     public Ticket reserveTicket(Ticket ticket) {
@@ -34,9 +39,25 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.getTicketForSectionAndSeatNumber(trainNumber, section, seat);
     }
 
-    public Ticket updateNewSeat(Ticket ticket, TicketUpdatePayload updatePayload) {
+    public JsonNode updateNewSeatIfFree(String pnrNumber, TicketUpdatePayload updatePayload) {
+        Ticket ticket = this.getTicketFromPnr(pnrNumber);
+
+        Ticket existingTicket = this.getTicketForSectionAndSeatNumber(
+            ticket.getRoute().getTrain().getTrainNumber(),
+            updatePayload.getNewSection(),
+            updatePayload.getNewSeat()
+        );
+
+        if (existingTicket != null) {
+            ObjectNode response = trainUtils.getMapper().createObjectNode();
+            response.put("reason", "requested seat is already reserved, please request again with different change of seat");
+            return response;
+        }
+
         ticket.setSection(updatePayload.getNewSection());
         ticket.setSeatNumber(updatePayload.getNewSeat());
-        return ticketRepository.save(ticket);
+        Ticket saved = ticketRepository.save(ticket);
+
+        return trainUtils.getMapper().convertValue(saved, JsonNode.class);
     }
 }

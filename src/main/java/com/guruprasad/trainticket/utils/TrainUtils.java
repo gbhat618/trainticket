@@ -43,12 +43,13 @@ public class TrainUtils {
             sb.append("Seat number cannot be more than " + maxSeatCapacity + ", Requested seat was: " + updatePayload.getNewSeat());
         }
 
-        ObjectNode resp = mapper.createObjectNode();
-
-        if (!sb.isEmpty())
+        if (!sb.isEmpty()) {
+            ObjectNode resp = mapper.createObjectNode();
             resp.put("reason", sb.toString());
+            return resp;
+        }
 
-        return resp;
+        return null;
     }
 
 }
