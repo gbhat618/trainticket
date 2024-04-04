@@ -11,7 +11,6 @@ import com.guruprasad.trainticket.service.TicketService;
 import com.guruprasad.trainticket.service.UserService;
 import com.guruprasad.trainticket.utils.TrainUtils;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,17 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/book-ticket")
 public class ReservationController {
 
-    @Autowired
-    TicketService ticketService;
+    private final TicketService ticketService;
+    private final RouteService routeService;
+    private final UserService userService;
+    private final TrainUtils trainUtils;
 
-    @Autowired
-    RouteService routeService;
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    TrainUtils trainUtils;
+    public ReservationController(TicketService ticketService, UserService userService, RouteService routeService, TrainUtils trainUtils) {
+        this.ticketService = ticketService;
+        this.userService = userService;
+        this.routeService = routeService;
+        this.trainUtils = trainUtils;
+    }
 
     @PostMapping
     public ResponseEntity<String> reserveTicket(@RequestBody @Valid TicketReservationPayload reservationPayload) throws JsonProcessingException {

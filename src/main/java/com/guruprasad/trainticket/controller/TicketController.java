@@ -7,7 +7,6 @@ import com.guruprasad.trainticket.dto.TicketUpdatePayload;
 import com.guruprasad.trainticket.service.TicketService;
 import com.guruprasad.trainticket.utils.TrainUtils;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +17,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/ticket")
 public class TicketController {
 
-    @Autowired
-    TicketService ticketService;
+    private final TicketService ticketService;
+    private final TrainUtils trainUtils;
 
-    @Autowired
-    TrainUtils trainUtils;
+    public TicketController(TicketService ticketService, TrainUtils trainUtils) {
+        this.ticketService = ticketService;
+        this.trainUtils = trainUtils;
+    }
 
     @GetMapping("/{pnrNumber}")
     public ResponseEntity<JsonNode> getTicket(@PathVariable("pnrNumber") String pnrNumber) throws JsonProcessingException {

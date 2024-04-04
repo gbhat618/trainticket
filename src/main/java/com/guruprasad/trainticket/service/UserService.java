@@ -2,40 +2,16 @@ package com.guruprasad.trainticket.service;
 
 import com.guruprasad.trainticket.dto.TicketReservationPayload;
 import com.guruprasad.trainticket.dto.User;
-import com.guruprasad.trainticket.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-public class UserService {
+public interface UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    User getById(String id);
 
-    public User getByEmail(String email) {
-        return userRepository.getByEmail(email);
-    }
+    User getByEmail(String email);
 
-    public User getById(String id) {
-        return userRepository.getById(id);
-    }
+    User getOrCreateUser(TicketReservationPayload reservationPayload);
 
-    public User getOrCreateUser(TicketReservationPayload payload) {
-        User payloadUser = payload.getUser();
-        User dbUser = getByEmail(payloadUser.getEmail());
+    void deleteByEmail(String email);
 
-        if (dbUser != null) {
-            return dbUser;
-        }
-
-        return userRepository.save(payloadUser);
-    }
-
-    public void deleteByEmail(String email) {
-        userRepository.deleteByEmail(email);
-    }
-
-    public void deleteById(String id) {
-        userRepository.deleteById(id);
-    }
+    void deleteById(String id);
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.guruprasad.trainticket.dto.User;
 import com.guruprasad.trainticket.service.UserService;
 import com.guruprasad.trainticket.utils.TrainUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +13,13 @@ import java.util.Optional;
 @RequestMapping(path = "/user")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final TrainUtils trainUtils;
 
-    @Autowired
-    TrainUtils trainUtils;
+    public UserController(UserService userService, TrainUtils trainUtils) {
+        this.userService = userService;
+        this.trainUtils = trainUtils;
+    }
 
     @GetMapping
     public ResponseEntity<String> getUser(@RequestParam("email") Optional<String> email, @RequestParam("id") Optional<String> id) throws JsonProcessingException {
