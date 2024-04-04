@@ -1,8 +1,5 @@
 # README
 
-Pending work:
-Unit tests haven't been completed, wcurl --location 'localhost:8080/ticket/5554285928' -vill be done in maximum 1 day
-
 ## System Design
 
 ### Tech stack
