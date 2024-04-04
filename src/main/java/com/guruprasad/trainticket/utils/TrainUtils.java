@@ -33,6 +33,8 @@ public class TrainUtils {
     }
 
     public JsonNode validate(TicketUpdatePayload updatePayload) {
+        getMapper();
+
         StringBuilder sb = new StringBuilder();
 
         if (!validSections.contains(updatePayload.getNewSection())) {
