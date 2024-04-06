@@ -14,9 +14,9 @@ jobs:
       - uses: cloudbees-io/checkout@v1
         name: checkout
       - uses: docker://maven:3.9.3-amazoncorretto-17
-        name: Run Tests
+        name: Run Build With Tests
         run: |
-          mvn test
+          mvn clean install
       - uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v2
         name: Sonar scan
         kind: scan
