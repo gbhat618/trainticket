@@ -22,3 +22,13 @@ jobs:
         kind: scan
         with:
           language: JAVA
+      - name: Set up Docker Hub registry
+        uses: cloudbees-io/configure-oci-credentials@v1
+        with:
+          registry: index.docker.io # or docker.io
+          username: ${{ vars.QUICKSTART_DOCKER_USERNAME }}
+          password: ${{ secrets.QUICKSTART_DOCKER_PASSWORD }}
+      - name: Push image to registry
+        uses: cloudbees-io/kaniko@v1
+        with:
+            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:1.0.0
