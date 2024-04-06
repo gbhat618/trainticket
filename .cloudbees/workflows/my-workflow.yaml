@@ -8,10 +8,14 @@ on:
       - 'develop'
 
 jobs:
-  build:
+  ci-job:
     steps:
+      - uses: docker://alpine/git:latest
+        run: |
+          git config --global --add safe.directory /cloudbees/workspace
+      - name: checkout
+        uses: cloudbees-io/checkout@v1
       - name: Run Tests
         uses: docker://maven:3.9.3-amazoncorretto-17
-        shell: sh
         run: |
           mvn test
