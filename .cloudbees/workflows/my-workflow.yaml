@@ -34,9 +34,11 @@ jobs:
           registry: index.docker.io # or docker.io
           username: ${{ vars.QUICKSTART_DOCKER_USERNAME }}
           password: ${{ secrets.QUICKSTART_DOCKER_PASSWORD }}
+      - name: Generate timestamp
+        id: timestamp # This will hold the output of the step, in this case, the timestamp
+        run: echo "::set-output name=TIMESTAMP::$(date '+%Y%m%d%H%M%S')"
+        uses: docker://bash:5
       - name: Push image to registry
         uses: cloudbees-io/kaniko@v1
-        env:
-            IMAGE_TAG: ${{ needs.job1.outputs.image_tag}}
         with:
-            destination: "${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:${{ IMAGE_TAG }}"
+            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:${{ steps.timestamp.outputs.TIMESTAMP }}
