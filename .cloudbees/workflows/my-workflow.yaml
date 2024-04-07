@@ -1,0 +1,34 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: My workflow
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  ci-job:
+    steps:
+      - uses: docker://alpine/git:latest
+        run: |
+          git config --global --add safe.directory /cloudbees/workspace
+      - uses: cloudbees-io/checkout@v1
+        name: checkout
+      - uses: docker://maven:3.9.3-amazoncorretto-17
+        name: Run Build With Tests
+        run: |
+          mvn clean install
+      - uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v2
+        name: Sonar scan
+        kind: scan
+        with:
+          language: JAVA
+      - name: Set up Docker Hub registry
+        uses: cloudbees-io/configure-oci-credentials@v1
+        with:
+          registry: index.docker.io # or docker.io
+          username: ${{ vars.QUICKSTART_DOCKER_USERNAME }}
+          password: ${{ secrets.QUICKSTART_DOCKER_PASSWORD }}
+      - name: Push image to registry
+        uses: cloudbees-io/kaniko@v1
+        with:
+            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:1.0.0
