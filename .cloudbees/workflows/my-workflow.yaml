@@ -38,4 +38,4 @@ jobs:
       - name: Push image to registry
         uses: cloudbees-io/kaniko@v1
         with:
-            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:${{ steps.timestamp.outputs.timestamp }}
+            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:tz${{ steps.timestamp.outputs.timestamp }}
