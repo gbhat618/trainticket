@@ -39,4 +39,4 @@ jobs:
         env:
             IMAGE_TAG: ${{ needs.job1.outputs.image_tag}}
         with:
-            destination: "${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:$(date '+%Y%m%d%H%M%S')"
+            destination: "${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:${{ IMAGE_TAG }}"
