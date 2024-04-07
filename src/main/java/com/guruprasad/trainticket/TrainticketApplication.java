@@ -1,5 +1,6 @@
 package com.guruprasad.trainticket;
 
+import com.guruprasad.trainticket.snippets.StaticCodeSnippets;
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
@@ -23,6 +24,7 @@ import java.util.Collections;
 public class TrainticketApplication {
 
 	public static void main(String[] args) {
+		StaticCodeSnippets.setLiquibaseNetUtilsLocalHost();
 		SpringApplication.run(TrainticketApplication.class, args);
 	}
 
