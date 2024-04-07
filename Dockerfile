@@ -1,3 +1,4 @@
+# Stage 1: Compile the native binary
 FROM ubuntu:23.10 AS build
 RUN apt-get update
 RUN apt-get install build-essential -y
