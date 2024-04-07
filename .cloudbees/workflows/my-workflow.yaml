@@ -7,7 +7,13 @@ on:
       - develop
 jobs:
   ci-job:
+    outputs:
+      image_tag: ${{ steps.step1.outputs.current_datetime }}
     steps:
+      - name: derive_image_id
+        uses: docker://bash:5
+        shell: bash
+        run: date '+%Y%m%d%H%M%S' > "$CLOUDBEES_OUTPUTS/current_datetime"
       - uses: docker://alpine/git:latest
         run: |
           git config --global --add safe.directory /cloudbees/workspace
@@ -30,5 +36,7 @@ jobs:
           password: ${{ secrets.QUICKSTART_DOCKER_PASSWORD }}
       - name: Push image to registry
         uses: cloudbees-io/kaniko@v1
+        env:
+            IMAGE_TAG: ${{ needs.job1.outputs.image_tag}}
         with:
-            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:1.0.0
+            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:$IMAGE_TAG
