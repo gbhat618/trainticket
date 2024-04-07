@@ -26,4 +26,5 @@ FROM debian:trixie-slim AS runtime
 RUN apt update && apt install libfreetype-dev -y
 WORKDIR /workspace
 COPY --from=build /buildspace/target/trainticket .
+EXPOSE 8080
 CMD ["./trainticket"]
