@@ -31,7 +31,7 @@ jobs:
           username: ${{ vars.QUICKSTART_DOCKER_USERNAME }}
           password: ${{ secrets.QUICKSTART_DOCKER_PASSWORD }}
       - name: Generate current timestamp
-        id: timestamp
+        id: step1
         uses: docker://bash:5
         shell: bash
         run: |
