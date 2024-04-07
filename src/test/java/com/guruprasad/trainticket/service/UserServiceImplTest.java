@@ -3,6 +3,7 @@ package com.guruprasad.trainticket.service;
 import com.guruprasad.trainticket.dto.TicketReservationPayload;
 import com.guruprasad.trainticket.dto.User;
 import com.guruprasad.trainticket.repository.UserRepository;
+import com.guruprasad.trainticket.snippets.StaticCodeSnippets;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class UserServiceImplTest {
+
+    UserServiceImplTest() {
+        StaticCodeSnippets.setLiquibaseNetUtilsLocalHost();
+    }
 
     @Autowired
     UserService userService;
