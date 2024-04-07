@@ -34,7 +34,8 @@ jobs:
         id: timestamp
         uses: docker://bash:5
         shell: bash
-        run: echo -n $(date '+%Y%m%d%H%M%S') > "$CLOUDBEES_OUTPUTS/timestamp"
+        run: |
+          echo -n $(date '+%Y%m%d%H%M%S') > "$CLOUDBEES_OUTPUTS/timestamp"
       - name: Push image to registry
         uses: cloudbees-io/kaniko@v1
         with:
