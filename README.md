@@ -1,4 +1,12 @@
 # README
+This application is now improved with,
+* CI: [CloudBees Platform](https://docs.cloudbees.com/docs/cloudbees-platform/latest/) to build and publish images to the docker hub. (check the [workflow file](https://github.com/bpg168/trainticket/blob/develop/.cloudbees/workflows/my-workflow.yaml) for ref)
+* GraalVM native image: [built with liberica nik](https://bell-sw.com/liberica-native-image-kit/) much faster bootup time and faster API responses. (check the [docker file](https://github.com/bpg168/trainticket/blob/develop/Dockerfile) for ref)
+
+Run it as,
+```
+docker run -p 8080:8080 --rm --name=trainticket bpg168/trainticket:20240407170358
+```
 
 ## System Design
 
