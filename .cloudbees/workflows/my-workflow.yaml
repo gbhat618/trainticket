@@ -8,12 +8,8 @@ on:
 jobs:
   ci-job:
     outputs:
-      image_tag: ${{ steps.step1.outputs.current_datetime }}
+      timestamp: ${{ steps.step1.outputs.timestamp }}
     steps:
-      - name: derive_image_id
-        uses: docker://bash:5
-        shell: bash
-        run: date '+%Y%m%d%H%M%S' > "$CLOUDBEES_OUTPUTS/current_datetime"
       - uses: docker://alpine/git:latest
         run: |
           git config --global --add safe.directory /cloudbees/workspace
@@ -34,11 +30,12 @@ jobs:
           registry: index.docker.io # or docker.io
           username: ${{ vars.QUICKSTART_DOCKER_USERNAME }}
           password: ${{ secrets.QUICKSTART_DOCKER_PASSWORD }}
-      - name: Generate timestamp
-        id: timestamp # This will hold the output of the step, in this case, the timestamp
-        run: echo "::set-output name=TIMESTAMP::$(date '+%Y%m%d%H%M%S')"
+      - name: Generate current timestamp
+        id: timestamp
         uses: docker://bash:5
+        shell: bash
+        run: date '+%Y%m%d%H%M%S' > "$CLOUDBEES_OUTPUTS/timestamp"
       - name: Push image to registry
         uses: cloudbees-io/kaniko@v1
         with:
-            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:${{ steps.timestamp.outputs.TIMESTAMP }}
+            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:${{ steps.timestamp.outputs.timestamp }}
