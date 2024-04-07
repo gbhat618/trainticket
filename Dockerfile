@@ -23,6 +23,8 @@ RUN mvn -Pnative native:compile -X
 
 # Stage 2: Package into a Docker image
 FROM debian:trixie-slim AS runtime
+# libfreetype-dev is required to prevent the below error. There might be a better solution.
+# error while loading shared libraries: libfreetype.so: cannot open shared object file: No such file or directory
 RUN apt update && apt install libfreetype-dev -y
 WORKDIR /workspace
 COPY --from=build /buildspace/target/trainticket .
