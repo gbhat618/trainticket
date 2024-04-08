@@ -8,7 +8,7 @@ on:
 jobs:
   ci-job:
     outputs:
-      timestamp: ${{ steps.step1.outputs.timestamp }}
+      timestamp: ${{ steps.timestamp.outputs.timestamp }}
     steps:
       - uses: docker://alpine/git:latest
         run: |
@@ -31,7 +31,7 @@ jobs:
           username: ${{ vars.QUICKSTART_DOCKER_USERNAME }}
           password: ${{ secrets.QUICKSTART_DOCKER_PASSWORD }}
       - name: Generate current timestamp
-        id: step1
+        id: timestamp
         uses: docker://bash:5
         shell: bash
         run: |
@@ -39,4 +39,4 @@ jobs:
       - name: Push image to registry
         uses: cloudbees-io/kaniko@v1
         with:
-            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:${{ steps.step1.outputs.timestamp }}
+            destination: ${{ vars.QUICKSTART_DOCKER_USERNAME }}/trainticket:${{ steps.timestamp.outputs.timestamp }}
